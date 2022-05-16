@@ -1,5 +1,6 @@
 Envionment variables:
 
-.env.development
+Add the files
+'.env.development' and '.env.test'
+Including PGDATABASE=<your_dataase>
 
-.env.test
