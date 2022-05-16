@@ -12,7 +12,7 @@ describe.only('GET api/topics', () => {
         return request(app).get('/api/topics')
         .expect(200)
         .then(({body}) => {
-            const topics = body
+            const { topics } = body
             expect(topics).toBeInstanceOf(Array)
             expect(topics.length).toBe(3)
             expect(topics.forEach((topic) => {
