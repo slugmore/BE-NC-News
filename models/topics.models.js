@@ -5,9 +5,6 @@ fetchTopics = () => {
   .query('SELECT * FROM topics').then((result) => {
     return result.rows;
   })
-  .catch((err) => {
-    console.log(err);
-  });
 };
 
 module.exports = fetchTopics;
