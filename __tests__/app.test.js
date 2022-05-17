@@ -27,7 +27,7 @@ describe('GET api/topics', () => {
     });
 });
 
-describe.only('GET api/articles/:article_id', () => {
+describe('GET api/articles/:article_id', () => {
     it('should return an article object containing the correct properties', () => {
         const ID = 3
         return request(app).get(`/api/articles/${ID}`)
@@ -59,6 +59,26 @@ describe.only('GET api/articles/:article_id', () => {
         .expect(404)
         .then(({body}) => {
             expect(body).toEqual({msg: 'Route not found'})
+        })
+    });
+});
+
+describe.only('PATCH /api/articles/:article_id', () => {
+    it('should update the vote count by the amount specified', () => {
+        const newVote = { inc_votes: 100 }
+        return request(app).patch('/api/articles/3')
+        .send(newVote)
+        .expect(200)
+        .then(({body}) => {
+            expect(body.article).toEqual({
+                article_id: 3,
+                title: "Eight pug gifs that remind me of mitch",
+                topic: "mitch",
+                author: "icellusedkars",
+                body: "some gifs",
+                created_at: expect.any(String),
+                votes: 100,
+            })
         })
     });
 });
