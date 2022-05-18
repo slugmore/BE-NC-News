@@ -13,6 +13,9 @@ fetchArticleById = (article_id) => {
 
 updateVotes = (votes, article_id) => {
    const newVote = votes.inc_votes
+   if (newVote === undefined) {
+       return Promise.reject({status: 400, msg: 'Bad Request'})
+   } 
    return db
    .query(`UPDATE articles SET votes = votes + $1 WHERE article_id = $2 RETURNING *;`, [newVote, article_id])
    .then(( result ) => {

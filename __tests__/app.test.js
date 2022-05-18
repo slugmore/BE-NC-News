@@ -98,6 +98,15 @@ describe('PATCH /api/articles/:article_id', () => {
             expect(body).toEqual({msg : "Bad Request"})
         })
     });
+    it('should return a 400 with a bad request if votes is empty or invalid', () => {
+        const newVote = {}
+        return request(app).patch(`/api/articles/3`)
+        .send(newVote)
+        .expect(400)
+        .then(({body}) => {
+            expect(body).toEqual({msg : "Bad Request"})
+        })
+    });
     it('should return a 404 with Not Found message if no endpoint is given', () => {
         return request(app).patch(`/api/articles/`)
         .expect(404)
@@ -106,12 +115,12 @@ describe('PATCH /api/articles/:article_id', () => {
         })
     });
     it('should return a 404 error with /route not found/ when end point is valid type but does not not exist', () => {
+       const newVote = { inc_votes: 100 }
        return request(app).patch('/api/articles/9898989')
+       .send(newVote)
        .expect(404)
        .then(({body}) => {
            expect(body).toEqual({msg: "Route not found"})
        })
     });
-    // add 404 error handling
-    // error for no vote
 });
