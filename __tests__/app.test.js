@@ -125,7 +125,7 @@ describe('PATCH /api/articles/:article_id', () => {
     });
 });
 
-describe.only('GET /api/users', () => {
+describe('GET /api/users', () => {
     it('should return an array of objects with the username property', () => {
         return request(app).get('/api/users')
         .expect(200)
@@ -140,6 +140,13 @@ describe.only('GET /api/users', () => {
                     })
                 )
             }))
+        })
+    });
+    it('should respond with a 404 error when given invalid endpoint', () => {
+        return request(app).get('/api/uusers')
+        .expect(404)
+        .then(({body}) => {
+            expect(body).toEqual({msg: "Route not found"})
         })
     });
 });
