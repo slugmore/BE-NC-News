@@ -124,3 +124,22 @@ describe('PATCH /api/articles/:article_id', () => {
        })
     });
 });
+
+describe.only('GET /api/users', () => {
+    it('should return an array of objects with the username property', () => {
+        return request(app).get('/api/users')
+        .expect(200)
+        .then(({body}) => {
+            const { users } = body
+            expect(users).toBeInstanceOf(Array)
+            expect(users.length).toBe(4)
+            expect(users.forEach((user) => {
+                expect(user).toEqual(
+                    expect.objectContaining({
+                        username : expect.any(String),
+                    })
+                )
+            }))
+        })
+    });
+});
