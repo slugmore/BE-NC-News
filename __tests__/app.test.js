@@ -44,6 +44,16 @@ describe('GET api/articles/:article_id', () => {
               })
         })
     });
+    it('should add a comment count to the article object with the correct amount of comments', () => {
+        const ID = 3
+        return request(app).get(`/api/articles/${ID}`)
+        .expect(200)
+        .then(({body}) => {
+            expect(body.article).toMatchObject({
+                comment_count: 2
+              })
+        })
+    });
     it('should return a 400 with a bad request if wrong data type is sent', () => {
         const ID = 'bad'
         return request(app).get(`/api/articles/${ID}`)
