@@ -160,3 +160,36 @@ describe('GET /api/users', () => {
         })
     });
 });
+
+describe.only('GET api/articles', () => {
+    it('should return an array of article objects', () => {
+        return request(app).get('/api/articles')
+        .expect(200)
+        .then(({body}) => {
+            const { articles } = body
+            expect(articles).toBeInstanceOf(Array)
+            expect(articles.length).toBe(12)
+            expect(articles.forEach((article) => {
+                expect(article).toEqual(
+                    expect.objectContaining({
+                        article_id: expect.any(Number),
+                        title: expect.any(String),
+                        topic: expect.any(String),
+                        author: expect.any(String),
+                        body: expect.any(String),
+                        created_at: expect.any(String),
+                        votes: expect.any(Number),
+                        comment_count: expect.any(Number),
+                    })
+                )
+            }))
+        })
+    });
+    it('should respond with a 404 error when given invalid endpoint', () => {
+        return request(app).get('/api/aartiklez')
+        .expect(404)
+        .then(({body}) => {
+            expect(body).toEqual({msg: "Route not found"})
+        })
+    });
+});

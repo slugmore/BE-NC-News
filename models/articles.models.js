@@ -11,7 +11,6 @@ fetchArticleById = (article_id) => {
     GROUP BY articles.article_id
     `, [article_id])
 
-
     .then(( result ) => {
         if (!result.rows.length) {
             return Promise.reject({status: 404, msg: 'Route not found'})
@@ -21,6 +20,7 @@ fetchArticleById = (article_id) => {
 }
 
 updateVotes = (votes, article_id) => {
+
    const newVote = votes.inc_votes
    if (newVote === undefined) {
        return Promise.reject({status: 400, msg: 'Bad Request'})
@@ -35,4 +35,22 @@ updateVotes = (votes, article_id) => {
    })
 }
 
-module.exports = {fetchArticleById, updateVotes};
+fetchArticles = () => {
+    return db
+
+    .query(`
+    SELECT articles.*, COUNT(comments.article_id)::int AS comment_count
+    FROM articles
+    LEFT JOIN comments ON comments.article_id = articles.article_id
+    GROUP BY articles.article_id
+    `)
+    
+    .then((result) => {
+        if (!result.rows.length) {
+            return Promise.reject({status: 404, msg: 'Route not found'})
+        }
+        return result.rows
+    })
+}
+
+module.exports = {fetchArticleById, updateVotes, fetchArticles};
