@@ -216,6 +216,15 @@ describe.only('GET api/articles/:article_id/comments', () => {
             }))
         })
     });
+    it('should return an empty array when article(ID) has no comments', () => {
+        const ID = 2
+        return request(app).get(`/api/articles/${ID}/comments`)
+        .expect(200)
+        .then(({body}) => {
+            const { comments } = body
+            expect(comments).toEqual([])
+        })
+    });
     it('should return a 400 with a bad request if wrong data type is sent', () => {
         const ID = 'bad'
         return request(app).get(`/api/articles/${ID}/comments`)

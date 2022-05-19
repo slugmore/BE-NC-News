@@ -24,10 +24,6 @@ fetchCommentsById = (article_id) => {
 
     .query(`SELECT * FROM comments WHERE article_id = $1`, [article_id])
     .then((result) => {
-        console.log(result.rows);
-        if (!result.rows.length) {
-            return Promise.reject({status: 404, msg: 'Route not found'})
-        }
         return result.rows
     })
 }
