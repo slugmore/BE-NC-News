@@ -46,9 +46,6 @@ fetchArticles = () => {
     `)
     
     .then((result) => {
-        if (!result.rows.length) {
-            return Promise.reject({status: 404, msg: 'Route not found'})
-        }
         return result.rows
     })
 }
