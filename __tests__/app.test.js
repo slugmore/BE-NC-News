@@ -161,7 +161,7 @@ describe('GET /api/users', () => {
     });
 });
 
-describe.only('GET api/articles', () => {
+describe('GET api/articles', () => {
     it('should return an array of article objects', () => {
         return request(app).get('/api/articles')
         .expect(200)
@@ -190,6 +190,47 @@ describe.only('GET api/articles', () => {
         .expect(404)
         .then(({body}) => {
             expect(body).toEqual({msg: "Route not found"})
+        })
+    });
+});
+
+describe.only('GET api/articles/:article_id/comments', () => {
+    it('should return an array of article objects', () => {
+        const ID = 1
+        return request(app).get(`/api/articles/${ID}/comments`)
+        .expect(200)
+        .then(({body}) => {
+            const { comments } = body
+            expect(comments).toBeInstanceOf(Array)
+            expect(comments.length).toBe(11)
+            expect(comments.forEach((comment) => {
+                expect(comment).toEqual(
+                    expect.objectContaining({
+                        comment_id: expect.any(Number),
+                        votes: expect.any(Number),
+                        author: expect.any(String),
+                        created_at: expect.any(String),
+                        body: expect.any(String),
+                    })
+                )
+            }))
+        })
+    });
+    it('should return a 400 with a bad request if wrong data type is sent', () => {
+        const ID = 'bad'
+        return request(app).get(`/api/articles/${ID}/comments`)
+        .expect(400)
+        .then(({body}) => {
+            expect(body).toEqual({msg : "Bad Request"})
+        })
+
+    });
+    it('should return 404 not found when passed a valid ID that does not exist', () => {
+        const ID = 7775763
+        return request(app).get(`/api/articles/${ID}`)
+        .expect(404)
+        .then(({body}) => {
+            expect(body).toEqual({msg: 'Route not found'})
         })
     });
 });
