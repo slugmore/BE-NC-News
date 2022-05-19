@@ -1,9 +1,19 @@
-const {fetchArticleById, updateVotes, fetchArticles} = require('../models/articles.models')
+const {fetchArticleById, updateVotes, fetchArticles, fetchCommentsById} = require('../models/articles.models')
 
 getArticleById = (req, res, next) => {
     const { article_id } = req.params
     fetchArticleById(article_id).then((article) => {
         res.status(200).send({article})
+    })
+    .catch((err) => {
+        next(err)
+    })
+}
+
+getCommentsById = (req, res, next) => {
+    const { article_id } = req.params
+    fetchCommentsById(article_id).then((comments) => {
+        res.status(200).send({comments})
     })
     .catch((err) => {
         next(err)
@@ -32,4 +42,4 @@ getArticles = (req, res, next) => {
 
 
 
-module.exports = {getArticleById, patchVotes, getArticles}
+module.exports = {getArticleById, patchVotes, getArticles, getCommentsById}

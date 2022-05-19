@@ -19,6 +19,15 @@ fetchArticleById = (article_id) => {
     })
 }
 
+fetchCommentsById = (article_id) => {
+    return db
+
+    .query(`SELECT * FROM comments WHERE article_id = $1`, [article_id])
+    .then((result) => {
+        return result.rows
+    })
+}
+
 updateVotes = (votes, article_id) => {
 
    const newVote = votes.inc_votes
@@ -50,4 +59,4 @@ fetchArticles = () => {
     })
 }
 
-module.exports = {fetchArticleById, updateVotes, fetchArticles};
+module.exports = {fetchArticleById, updateVotes, fetchArticles, fetchCommentsById};
