@@ -194,7 +194,7 @@ describe('GET api/articles', () => {
     });
 });
 
-describe.only('GET api/articles/:article_id/comments', () => {
+describe('GET api/articles/:article_id/comments', () => {
     it('should return an array of article objects', () => {
         const ID = 1
         return request(app).get(`/api/articles/${ID}/comments`)
@@ -240,6 +240,84 @@ describe.only('GET api/articles/:article_id/comments', () => {
         .expect(404)
         .then(({body}) => {
             expect(body).toEqual({msg: 'Route not found'})
+        })
+    });
+});
+
+describe.only('POST api/articles/:article_id/comments', () => {
+    it('should respond with an object containing username and body properties', () => {
+        const ID = 3
+        const newComment = {
+            username: "icellusedkars",
+            body: "test review"
+        }
+        return request(app)
+        .post(`/api/articles/${ID}/comments`)
+        .send(newComment)
+        .expect(201)
+        .then(({body}) => {
+            expect(body).toMatchObject({
+                author: "icellusedkars",
+                body: "test review",
+                article_id: 3
+            })
+
+        })
+    });
+    it('should respond with error 404 if given an non existent ID', () => {
+        const ID = 400000
+        const newComment = {
+            username: "icellusedkars",
+            body: "test review"
+        }
+        return request(app)
+        .post(`/api/articles/${ID}/comments`)
+        .send(newComment)
+        .expect(404)
+        .then(({body}) => {
+            expect(body).toEqual({msg: 'Article not found'})   
+        })
+    });
+    it('should respond with 400 bad request if request body is invalid', () => {
+        const ID = 3
+        const newComment = {
+            username: "icellusedkars",
+        }
+        return request(app)
+        .post(`/api/articles/${ID}/comments`)
+        .send(newComment)
+        .expect(400)
+        .then(({body}) => {
+            expect(body).toEqual({msg : "Bad Request"})
+
+        })
+    });
+    it('should respond with 400 bad request when given an invalid ID', () => {
+        const ID = 'not an ID'
+        const newComment = {
+            username: "icellusedkars",
+            body: "test review"
+        }
+        return request(app)
+        .post(`/api/articles/${ID}/comments`)
+        .send(newComment)
+        .expect(400)
+        .then(({body}) => {
+            expect(body).toEqual({msg: 'Bad Request'})   
+        })
+    });
+    it('should respond with 404: user not found when username does not exist', () => {
+        const ID = 5
+        const newComment = {
+            username: "AlanSugar",
+            body: "test review"
+        }
+        return request(app)
+        .post(`/api/articles/${ID}/comments`)
+        .send(newComment)
+        .expect(404)
+        .then(({body}) => {
+            expect(body).toEqual({msg: 'User not found'})   
         })
     });
 });
