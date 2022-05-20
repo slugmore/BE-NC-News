@@ -81,7 +81,6 @@ insertComment = (comment, ID) => {
     const { body, username } = comment
     return db.query(`INSERT INTO comments (body, author, article_id) VALUES ($1, $2, $3) RETURNING *`, [body, username, ID])
     .then((result) => {
-        console.log(result.rows);
        return result.rows[0]
     })
 

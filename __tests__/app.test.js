@@ -244,7 +244,7 @@ describe('GET api/articles/:article_id/comments', () => {
     });
 });
 
-describe.only('POST api/articles/:article_id/comments', () => {
+describe('POST api/articles/:article_id/comments', () => {
     it('should respond with an object containing username and body properties', () => {
         const ID = 3
         const newComment = {
