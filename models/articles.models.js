@@ -68,9 +68,17 @@ checkArticleIdExists = (ID) => {
     })
 }
 
+checkUserExists = (username) => {
+    return db.query(`SELECT * FROM articles WHERE author = $1`, [username])
+    .then((result) => {
+        if (!result.rows.length) {
+            return Promise.reject({status: 404, msg: 'User not found'})
+        }
+    })
+}
+
 insertComment = (comment, ID) => {
     const { body, username } = comment
-console.log(body, username, ID, '< model');
     return db.query(`INSERT INTO comments (body, author, article_id) VALUES ($1, $2, $3) RETURNING *`, [body, username, ID])
     .then((result) => {
         console.log(result.rows);
@@ -79,4 +87,4 @@ console.log(body, username, ID, '< model');
 
 }
 
-module.exports = {fetchArticleById, updateVotes, fetchArticles, fetchCommentsById, insertComment, checkArticleIdExists}
+module.exports = {fetchArticleById, updateVotes, fetchArticles, fetchCommentsById, insertComment, checkArticleIdExists, checkUserExists}

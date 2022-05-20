@@ -306,7 +306,7 @@ describe.only('POST api/articles/:article_id/comments', () => {
             expect(body).toEqual({msg: 'Bad Request'})   
         })
     });
-    it('should respond with 400: bad request when username does not exist', () => {
+    it('should respond with 404: user not found when username does not exist', () => {
         const ID = 5
         const newComment = {
             username: "AlanSugar",
@@ -315,9 +315,9 @@ describe.only('POST api/articles/:article_id/comments', () => {
         return request(app)
         .post(`/api/articles/${ID}/comments`)
         .send(newComment)
-        .expect(400)
+        .expect(404)
         .then(({body}) => {
-            expect(body).toEqual({msg: 'Bad Request'})   
+            expect(body).toEqual({msg: 'User not found'})   
         })
     });
 });
