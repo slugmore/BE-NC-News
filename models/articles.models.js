@@ -59,4 +59,24 @@ fetchArticles = () => {
     })
 }
 
-module.exports = {fetchArticleById, updateVotes, fetchArticles, fetchCommentsById};
+checkArticleIdExists = (ID) => {
+    return db.query(`SELECT * FROM articles WHERE article_id = $1`, [ID])
+    .then((result) => {
+        if (!result.rows.length) {
+            return Promise.reject({status: 404, msg: 'Article not found'})
+        }
+    })
+}
+
+insertComment = (comment, ID) => {
+    const { body, username } = comment
+console.log(body, username, ID, '< model');
+    return db.query(`INSERT INTO comments (body, author, article_id) VALUES ($1, $2, $3) RETURNING *`, [body, username, ID])
+    .then((result) => {
+        console.log(result.rows);
+       return result.rows[0]
+    })
+
+}
+
+module.exports = {fetchArticleById, updateVotes, fetchArticles, fetchCommentsById, insertComment, checkArticleIdExists}
