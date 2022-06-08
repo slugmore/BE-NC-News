@@ -161,7 +161,7 @@ describe('GET /api/users', () => {
     });
 });
 
-describe('GET api/articles', () => {
+xdescribe('GET api/articles', () => {
     it('should return an array of article objects', () => {
         return request(app).get('/api/articles')
         .expect(200)
@@ -331,7 +331,7 @@ describe('POST api/articles/:article_id/comments', () => {
     });
 });
 
-describe('GET api/articles/:queries', () => {
+xdescribe('GET api/articles/:queries', () => {
     it('should return array or articles sorted by comment_count', () => {
         const query = '?sort_by=comment_count'
         return request(app).get(`/api/articles/${query}`)
