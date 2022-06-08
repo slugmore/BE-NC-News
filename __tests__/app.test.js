@@ -192,6 +192,15 @@ describe('GET api/articles', () => {
             expect(body).toEqual({msg: "Route not found"})
         })
     });
+    it('should sort the articles by date in descending order', () => {
+        return request(app).get('/api/articles')
+        .expect(200)
+        .then(({body}) => {
+            const { articles } = body
+            expect(articles).toBeSorted({descending: true})
+            expect(articles).toBeSortedBy('created_at')
+        })
+    });
 });
 
 describe('GET api/articles/:article_id/comments', () => {
@@ -321,3 +330,61 @@ describe('POST api/articles/:article_id/comments', () => {
         })
     });
 });
+
+describe('GET api/articles/:queries', () => {
+    it('should return array or articles sorted by comment_count', () => {
+        const query = '?sort_by=comment_count'
+        return request(app).get(`/api/articles/${query}`)
+        .expect(200)
+        .send(query)
+        .then(({body}) => {
+            const { articles } = body
+            expect(articles).toBeSorted({descending: true})
+            expect(articles).toBeSortedBy('comment_count')
+        })
+    });
+    it('should return array of articles sorted by article_id', () => {
+        const query = '?sort_by=article_id'
+        return request(app).get(`/api/articles/${query}`)
+        .expect(200)
+        .send(query)
+        .then(({body}) => {
+            const { articles } = body
+            expect(articles).toBeSorted({descending: true})
+            expect(articles).toBeSortedBy('article_id')
+        })
+    });
+    it('should return an array of articles ordered by by ascending order', () => {
+        const query = '?order=asc'
+        return request(app).get(`/api/articles/${query}`)
+        .expect(200)
+        .send(query)
+        .then(({body}) => {
+            const { articles } = body
+            expect(articles).toBeSorted({descending: false})
+        })
+    });
+    it('should return an array of articles ordered by by descending order', () => {
+        const query = '?order=desc'
+        return request(app).get(`/api/articles/${query}`)
+        .expect(200)
+        .send(query)
+        .then(({body}) => {
+            const { articles } = body
+            expect(articles).toBeSorted({descending: true})
+        })
+    });
+});
+
+// greenlist sort_by, topics, order
+// possible tests
+
+// ?sort_by=comment_count expect 200 toBeSortedBy(comment count) desc = true
+// ?order=asc expect 200 toBeSortedBy created_at desc false
+// ?author=validauthor expect 200 for each review.owner to be author
+// ?topic=validtopic 200 foreach article.topic expt to be topic
+// 400 sort by equals not valid sort by
+// 404 author = not valid author
+// 404 topic = not a valid topic
+// 200 ?author=validauthor with no articles return 200 and empty array
+// topic valid but has no articles exp 200 and empty array 

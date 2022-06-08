@@ -32,7 +32,10 @@ patchVotes = (req, res, next) => {
 }
 
 getArticles = (req, res, next) => {
-    fetchArticles().then((articles) => {
+    // console.log(req.query);
+    const sortByQuery = req.query.sort_by;
+    const sortOrder = req.query.order;
+    fetchArticles(sortByQuery, sortOrder).then((articles) => {
         res.status(200).send({articles})
     })
     .catch((err) => {
