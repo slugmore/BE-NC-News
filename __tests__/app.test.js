@@ -161,7 +161,7 @@ describe('GET /api/users', () => {
     });
 });
 
-xdescribe('GET api/articles', () => {
+describe('GET api/articles', () => {
     it('should return an array of article objects', () => {
         return request(app).get('/api/articles')
         .expect(200)
@@ -197,8 +197,7 @@ xdescribe('GET api/articles', () => {
         .expect(200)
         .then(({body}) => {
             const { articles } = body
-            expect(articles).toBeSorted({descending: true})
-            expect(articles).toBeSortedBy('created_at')
+            expect(articles).toBeSortedBy('created_at', {descending: true})
         })
     });
 });
@@ -331,7 +330,7 @@ describe('POST api/articles/:article_id/comments', () => {
     });
 });
 
-xdescribe('GET api/articles/:queries', () => {
+describe('GET api/articles/:queries', () => {
     it('should return array or articles sorted by comment_count', () => {
         const query = '?sort_by=comment_count'
         return request(app).get(`/api/articles/${query}`)
@@ -339,8 +338,7 @@ xdescribe('GET api/articles/:queries', () => {
         .send(query)
         .then(({body}) => {
             const { articles } = body
-            expect(articles).toBeSorted({descending: true})
-            expect(articles).toBeSortedBy('comment_count')
+            expect(articles).toBeSortedBy('comment_count', {descending: true})
         })
     });
     it('should return array of articles sorted by article_id', () => {
@@ -350,8 +348,7 @@ xdescribe('GET api/articles/:queries', () => {
         .send(query)
         .then(({body}) => {
             const { articles } = body
-            expect(articles).toBeSorted({descending: true})
-            expect(articles).toBeSortedBy('article_id')
+            expect(articles).toBeSortedBy('article_id', {descending: true})
         })
     });
     it('should return an array of articles ordered by by ascending order', () => {
