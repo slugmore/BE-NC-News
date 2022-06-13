@@ -3,7 +3,9 @@ const {getArticleById, patchVotes, getArticles, getCommentsById, addComment, sor
 const getTopics = require('./controllers/topics.controllers')
 const getUsers = require('./controllers/users.controllers')
 const app = express()
+const cors = require('cors');
 
+app.use(cors());
 app.use(express.json())
 
 app.get("/api/topics", getTopics);
