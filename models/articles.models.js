@@ -1,6 +1,6 @@
 const db = require("../db/connection");
 
-fetchArticleById = (article_id) => {
+const fetchArticleById = (article_id) => {
   return db
 
     .query(
@@ -22,7 +22,7 @@ fetchArticleById = (article_id) => {
     });
 };
 
-fetchCommentsById = (article_id) => {
+const fetchCommentsById = (article_id) => {
   return db
 
     .query(`SELECT * FROM comments WHERE article_id = $1`, [article_id])
@@ -31,7 +31,7 @@ fetchCommentsById = (article_id) => {
     });
 };
 
-updateVotes = (votes, article_id) => {
+const updateVotes = (votes, article_id) => {
   const newVote = votes.inc_votes;
   if (newVote === undefined) {
     return Promise.reject({ status: 400, msg: "Bad Request" });
@@ -49,34 +49,39 @@ updateVotes = (votes, article_id) => {
     });
 };
 
-fetchArticles = (sortByQuery, sortOrder) => {
+const fetchArticles = (sortByQuery, sortOrder, topic) => {
+
+  
   if (!sortByQuery || sortByQuery === undefined) {
-    sortByQuery = "created_at";
+      sortByQuery = "created_at";
+    }
+    if (!sortOrder || sortOrder === undefined) {
+        sortOrder = "desc";
+      }
+      const queryParams = []
+      
+      let queryString = `SELECT articles.*, COUNT(comments.article_id)::int AS comment_count
+      FROM articles 
+      LEFT JOIN comments ON comments.article_id = articles.article_id`
+      if(topic) {
+    queryString += ` WHERE articles.topic = $1`
+    queryParams.push(topic)
   }
-  if (!sortOrder || sortOrder === undefined) {
-    sortOrder = "desc";
-  }
-  // console.log(sortByQuery);
-  // console.log(sortOrder);
+  queryString += ` GROUP BY articles.article_id
+  ORDER BY ${sortByQuery} ${sortOrder}`
+ 
+
   return db
 
-    .query(
-      `
-    SELECT articles.*, COUNT(comments.article_id)::int AS comment_count
-    FROM articles
-    LEFT JOIN comments ON comments.article_id = articles.article_id
-    GROUP BY articles.article_id
-    ORDER BY ${sortByQuery} ${sortOrder}
-    `
-    )
+    .query(queryString, queryParams)
 
     .then((result) => {
-      // console.log(result.rows);
       return result.rows;
-    });
+    })
+    .catch(console.log)
 };
 
-checkArticleIdExists = (ID) => {
+const checkArticleIdExists = (ID) => {
   return db
     .query(`SELECT * FROM articles WHERE article_id = $1`, [ID])
     .then((result) => {
@@ -86,7 +91,7 @@ checkArticleIdExists = (ID) => {
     });
 };
 
-checkUserExists = (username) => {
+const checkUserExists = (username) => {
   return db
     .query(`SELECT * FROM articles WHERE author = $1`, [username])
     .then((result) => {
@@ -96,7 +101,7 @@ checkUserExists = (username) => {
     });
 };
 
-insertComment = (comment, ID) => {
+const insertComment = (comment, ID) => {
   const { body, username } = comment;
   return db
     .query(

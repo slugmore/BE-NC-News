@@ -1,6 +1,6 @@
-const {fetchArticleById, updateVotes, fetchArticles, fetchCommentsById, insertComment, checkArticleIdExists, checkUserExists} = require('../models/articles.models')
+const { fetchArticleById, updateVotes, fetchArticles, fetchCommentsById, insertComment, checkArticleIdExists, checkUserExists, fetchArticlesByTopic } = require('../models/articles.models')
 
-getArticleById = (req, res, next) => {
+const getArticleById = (req, res, next) => {
     const { article_id } = req.params
     fetchArticleById(article_id).then((article) => {
         res.status(200).send({article})
@@ -10,7 +10,7 @@ getArticleById = (req, res, next) => {
     })
 }
 
-getCommentsById = (req, res, next) => {
+const getCommentsById = (req, res, next) => {
     const { article_id } = req.params
     fetchCommentsById(article_id).then((comments) => {
         res.status(200).send({comments})
@@ -20,7 +20,7 @@ getCommentsById = (req, res, next) => {
     })
 }
 
-patchVotes = (req, res, next) => {
+const patchVotes = (req, res, next) => {
     const votes = req.body
     const { article_id } = req.params
     updateVotes(votes, article_id).then((article) => {
@@ -31,11 +31,11 @@ patchVotes = (req, res, next) => {
     })
 }
 
-getArticles = (req, res, next) => {
-    // console.log(req.query);
+const getArticles = (req, res, next) => {
     const sortByQuery = req.query.sort_by;
     const sortOrder = req.query.order;
-    fetchArticles(sortByQuery, sortOrder).then((articles) => {
+    const topic = req.query.topic
+    fetchArticles(sortByQuery, sortOrder, topic).then((articles) => {
         res.status(200).send({articles})
     })
     .catch((err) => {
@@ -43,7 +43,7 @@ getArticles = (req, res, next) => {
     })
 }
 
-addComment = (req, res, next) => {
+const addComment = (req, res, next) => {
     const ID = req.params.article_id
     const comment = req.body
     const username = req.body.username

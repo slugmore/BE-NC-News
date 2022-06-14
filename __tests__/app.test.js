@@ -333,9 +333,8 @@ describe('POST api/articles/:article_id/comments', () => {
 describe('GET api/articles/:queries', () => {
     it('should return array or articles sorted by comment_count', () => {
         const query = '?sort_by=comment_count'
-        return request(app).get(`/api/articles/${query}`)
+        return request(app).get(`/api/articles${query}`)
         .expect(200)
-        .send(query)
         .then(({body}) => {
             const { articles } = body
             expect(articles).toBeSortedBy('comment_count', {descending: true})
@@ -343,9 +342,8 @@ describe('GET api/articles/:queries', () => {
     });
     it('should return array of articles sorted by article_id', () => {
         const query = '?sort_by=article_id'
-        return request(app).get(`/api/articles/${query}`)
+        return request(app).get(`/api/articles${query}`)
         .expect(200)
-        .send(query)
         .then(({body}) => {
             const { articles } = body
             expect(articles).toBeSortedBy('article_id', {descending: true})
@@ -353,9 +351,8 @@ describe('GET api/articles/:queries', () => {
     });
     it('should return an array of articles ordered by by ascending order', () => {
         const query = '?order=asc'
-        return request(app).get(`/api/articles/${query}`)
+        return request(app).get(`/api/articles${query}`)
         .expect(200)
-        .send(query)
         .then(({body}) => {
             const { articles } = body
             expect(articles).toBeSorted({descending: false})
@@ -363,16 +360,32 @@ describe('GET api/articles/:queries', () => {
     });
     it('should return an array of articles ordered by by descending order', () => {
         const query = '?order=desc'
-        return request(app).get(`/api/articles/${query}`)
+        return request(app).get(`/api/articles${query}`)
         .expect(200)
-        .send(query)
         .then(({body}) => {
             const { articles } = body
             expect(articles).toBeSorted({descending: true})
         })
     });
     it('should return a list of articles with given topic', () => {
-        
+        const query = '?topic=cats'
+        return request(app).get(`/api/articles${query}`)
+        .expect(200)
+        .then(({body}) => {
+            const { articles } = body
+            expect(articles).toEqual([{
+            
+                article_id: 5,
+                title: "UNCOVERED: catspiracy to bring down democracy",
+                topic: "cats",
+                author: "rogersop",
+                comment_count: 2,
+                body: "Bastet walks amongst us, and the cats are taking arms!",
+                created_at: "2020-08-03T13:14:00.000Z",
+                votes: 0,  
+            }])    
+              
+        })
     });
 });
 
