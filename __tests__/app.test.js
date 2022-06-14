@@ -371,6 +371,9 @@ describe('GET api/articles/:queries', () => {
             expect(articles).toBeSorted({descending: true})
         })
     });
+    it('should return a list of articles with given topic', () => {
+        
+    });
 });
 
 // greenlist sort_by, topics, order
